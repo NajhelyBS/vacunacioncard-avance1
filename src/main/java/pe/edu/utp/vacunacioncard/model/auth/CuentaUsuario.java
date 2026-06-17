@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pe.edu.utp.vacunacioncard.model.usuario.Usuario;
+import java.time.ZoneId;
+import java.util.UUID;
 
 /**
  * Clase CuentaUsuario que representa la cuenta de acceso de un usuario en el sistema.
@@ -31,14 +33,15 @@ public class CuentaUsuario {
     private int intentosFallidos;
 
     public CuentaUsuario(String username, String passwordHash, Usuario usuario, Rol rol) {
-        this.id = java.util.UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
         this.username = username;
         this.passwordHash = passwordHash;
         this.usuario = usuario;
         this.rol = rol;
         this.cuentaActiva = true;
         this.bloqueada = false;
-        this.fechaCreacion = LocalDateTime.now();
+        this.fechaCreacion = LocalDateTime.now(ZoneId.of("America/Lima"));
+        this.ultimoAcceso = null;
         this.intentosFallidos = 0;
     }
 }
