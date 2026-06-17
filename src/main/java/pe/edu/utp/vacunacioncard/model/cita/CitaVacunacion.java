@@ -1,7 +1,7 @@
 package pe.edu.utp.vacunacioncard.model.cita;
 
 import java.time.LocalDateTime;
-
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +29,7 @@ public class CitaVacunacion {
     private String observaciones;
 
     public CitaVacunacion(Paciente paciente, Vacuna vacuna, LocalDateTime fechaHora, String centroVacunacion) {
-        this.id = java.util.UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
         this.paciente = paciente;
         this.vacuna = vacuna;
         this.fechaHora = fechaHora;
