@@ -50,12 +50,14 @@ public class Vacuna implements Serializable {
     @Column(name = "temperatura_almacenamiento")
     private String temperaturaAlmacenamiento;
 
+    @Builder.Default
     @Column(name = "disponible")
     private boolean disponible = true;
 
     @ElementCollection
     @CollectionTable(name = "mae_vacuna_efectos", joinColumns = @JoinColumn(name = "vacuna_id"))
     @Column(name = "efecto")
+    @Builder.Default
     private List<String> efectosSecundarios = new ArrayList<>();
 
     @Column(name = "contraindicaciones")
