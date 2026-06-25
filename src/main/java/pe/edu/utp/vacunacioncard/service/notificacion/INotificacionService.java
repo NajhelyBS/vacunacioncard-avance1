@@ -2,6 +2,8 @@ package pe.edu.utp.vacunacioncard.service.notificacion;
 
 import pe.edu.utp.vacunacioncard.model.notificacion.Notificacion;
 import pe.edu.utp.vacunacioncard.model.usuario.Usuario;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -29,4 +31,13 @@ public interface INotificacionService {
      * @param mensaje Cuerpo textual del aviso.
      */
     void registrarNuevaAlerta(Usuario usuario, String mensaje);
+
+    /**
+ * Genera de forma dinámica un recordatorio de vacunación usando el patrón de diseño.
+ * @param usuario El paciente que recibirá el recordatorio.
+ * @param registro El registro de la vacuna asociada.
+ * @param fecha la fecha programada para el aviso.
+ */
+void registrarRecordatorioVacuna(Usuario usuario, pe.edu.utp.vacunacioncard.model.vacunacion.RegistroVacuna registro, LocalDateTime fecha);
+
 }
