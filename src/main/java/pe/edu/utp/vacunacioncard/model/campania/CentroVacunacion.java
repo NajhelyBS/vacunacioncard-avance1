@@ -1,11 +1,12 @@
 package pe.edu.utp.vacunacioncard.model.campania;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
+
+import jakarta.persistence.*;
+import lombok.*;
 import pe.edu.utp.vacunacioncard.model.comun.Contacto;
 import pe.edu.utp.vacunacioncard.model.comun.Direccion;
-import java.util.UUID;
+
 /**
  * Clase CentroVacunacion que representa un centro donde se aplican vacunas.
  *
@@ -13,22 +14,39 @@ import java.util.UUID;
  * @version 1.0
  */
 
+@Builder
+@Entity
+@Table(name = "mae_centro_vacunacion")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class CentroVacunacion {
-    private final String id = UUID.randomUUID().toString();
-    private String nombre;
-    private Direccion direccion;
-    private Contacto contacto;
-    private int capacidadDiaria;
-    private int personalDisponible;
-    private String horarioAtencion;
-    private boolean activo =  true;
+public class CentroVacunacion implements Serializable {
 
-    public CentroVacunacion(String nombre, Direccion direccion, int capacidadDiaria) {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.capacidadDiaria = capacidadDiaria;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Embedded
+    private Direccion direccion;
+
+    @Embedded
+    private Contacto contacto;
+
+    @Column(name = "capacidad_diaria")
+    private int capacidadDiaria;
+
+    @Column(name = "personal_disponible")
+    private int personalDisponible;
+
+    @Column(name = "horario_atencion")
+    private String horarioAtencion;
+
+    @Column(name = "activo")
+    private boolean activo = true;
 }

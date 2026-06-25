@@ -1,31 +1,29 @@
 package pe.edu.utp.vacunacioncard.model.vacunacion;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
- * Clase UbicacionAplicacion que representa la ubicación donde se aplica una vacuna.
- * Incluye información del lugar de atención.
+ * Clase UbicacionAplicacion que representa la ubicacion donde se aplica una vacuna.
+ * Incluye informacion del lugar de atencion.
  *
  * @author Grupo 1
  * @version 1.0
  */
+
+@Embeddable
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UbicacionAplicacion {
 
+    @Column(name = "nombre_lugar")
     private String nombreLugar;
-    private String direccion;
-    private String distrito;
 
-    public UbicacionAplicacion(String nombreLugar, String direccion, String distrito) {
-        if (nombreLugar == null || nombreLugar.isBlank()) {
-            throw new IllegalArgumentException("El nombre del lugar es obligatorio y no puede ser nulo o vacío");
-        }
-        this.nombreLugar = nombreLugar;
-        this.direccion = direccion;
-        this.distrito = distrito;
-    }
+    @Column(name = "direccion_aplicacion")
+    private String direccion;
+
+    @Column(name = "distrito")
+    private String distrito;
 }

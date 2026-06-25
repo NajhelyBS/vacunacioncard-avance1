@@ -1,41 +1,65 @@
 package pe.edu.utp.vacunacioncard.model.vacunacion;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import pe.edu.utp.vacunacioncard.model.usuario.Paciente;
 
 /**
- * Clase EsquemaVacunacion que representa el esquema de vacunación que debe seguir un paciente.
+ * Clase EsquemaVacunacion que representa el esquema de vacunacion que debe seguir un paciente.
  *
  * @author Grupo 1
  * @version 1.0
  */
 
+@Builder
+@Entity
+@Table(name = "mae_esquema_vacunacion")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class EsquemaVacunacion {
-    private final String id = UUID.randomUUID().toString();
-    private String nombre;
-    private String descripcion;
-    private List<Vacuna> vacunasRequeridas = new ArrayList<>();
-    private List<Integer> edadesRecomendadas = new ArrayList<>();
-    private Paciente pacienteAsignado;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
-    private String estado = "PENDIENTE";
+public class EsquemaVacunacion implements Serializable {
 
-    public EsquemaVacunacion(String nombre, String descripcion) {
-        if (nombre == null || nombre.isBlank() || descripcion == null || descripcion.isBlank()) {
-            throw new IllegalArgumentException("Datos obligatorios (Nombre y Descripción) no pueden ser nulos o vacíos");
-        }
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "descripcion")
+    private String descripcion;
+
+    @ManyToMany
+    @JoinTable(
+        name = "mae_esquema_vacuna",
+        joinColumns = @JoinColumn(name = "esquema_id"),
+        inverseJoinColumns = @JoinColumn(name = "vacuna_id")
+    )
+    private List<Vacuna> vacunasRequeridas = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "mae_esquema_edades", joinColumns = @JoinColumn(name = "esquema_id"))
+    @Column(name = "edad_recomendada")
+    private List<Integer> edadesRecomendadas = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "paciente_id")
+    private Paciente pacienteAsignado;
+
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
+
+    @Column(name = "estado")
+    private String estado = "PENDIENTE";
 }

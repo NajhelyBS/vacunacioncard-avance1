@@ -1,45 +1,62 @@
 package pe.edu.utp.vacunacioncard.model.vacunacion;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.UUID;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import jakarta.persistence.*;
+import lombok.*;
 import pe.edu.utp.vacunacioncard.model.usuario.Enfermero;
 import pe.edu.utp.vacunacioncard.model.usuario.Paciente;
 
 /**
- * Clase AplicacionDosis que representa la aplicación de una dosis específica a un paciente.
+ * Clase AplicacionDosis que representa la aplicacion de una dosis especifica a un paciente.
  *
  * @author Grupo 1
  * @version 1.0
  */
 
+@Builder
+@Entity
+@Table(name = "mae_aplicacion_dosis")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class AplicacionDosis {
-    private final String id  = UUID.randomUUID().toString();
-    private Paciente paciente;
-    private Vacuna vacuna;
-    private int dosisNumero;
-    private final LocalDateTime fechaHora = LocalDateTime.now(ZoneId.of("America/Lima"));
-    private Enfermero enfermero;
-    private String loteVacuna;
-    private String sitioInyeccion;
-    private boolean exito = true;
-    private String observaciones;
+public class AplicacionDosis implements Serializable {
 
-    public AplicacionDosis(Paciente paciente, Vacuna vacuna, int dosisNumero, Enfermero enfermero, String loteVacuna) {
-    
-        if (paciente == null || vacuna == null || enfermero == null) {
-            throw new IllegalArgumentException("Datos obligatorios (Paciente, Vacuna, Enfermero) no pueden ser nulos o vacíos");
-        }
-        this.paciente = paciente;
-        this.vacuna = vacuna;
-        this.dosisNumero = dosisNumero;
-        this.enfermero = enfermero;
-        this.loteVacuna = loteVacuna;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
+    @ManyToOne
+    @JoinColumn(name = "vacuna_id", nullable = false)
+    private Vacuna vacuna;
+
+    @Column(name = "dosis_numero")
+    private int dosisNumero;
+
+    @Column(name = "fecha_hora")
+    private LocalDateTime fechaHora;
+
+    @ManyToOne
+    @JoinColumn(name = "enfermero_id", nullable = false)
+    private Enfermero enfermero;
+
+    @Column(name = "lote_vacuna")
+    private String loteVacuna;
+
+    @Column(name = "sitio_inyeccion")
+    private String sitioInyeccion;
+
+    @Column(name = "exito")
+    private boolean exito = true;
+
+    @Column(name = "observaciones")
+    private String observaciones;
 }

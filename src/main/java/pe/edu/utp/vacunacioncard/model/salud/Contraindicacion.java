@@ -1,33 +1,43 @@
 package pe.edu.utp.vacunacioncard.model.salud;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
+
+import jakarta.persistence.*;
+import lombok.*;
 import pe.edu.utp.vacunacioncard.model.vacunacion.Vacuna;
-import java.util.UUID;
 
 /**
- * Clase Contraindicacion que representa una contraindicación para la aplicación de vacunas.
+ * Clase Contraindicacion que representa una contraindicacion para la aplicacion de vacunas.
  *
  * @author Grupo 1
  * @version 1.0
  */
 
+@Builder
+@Entity
+@Table(name = "mae_contraindicacion")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class Contraindicacion {
-    private final String id = UUID.randomUUID().toString();
-    private String descripcion;
-    private String severidad;
-    private String condicionAsociada;
-    private Vacuna vacunaAfectada;
+public class Contraindicacion implements Serializable {
 
-    public Contraindicacion(String descripcion, String severidad) {
-        if (descripcion == null || descripcion.isBlank()) {
-            throw new IllegalArgumentException("La descripción es obligatoria");
-        }
-        this.descripcion = descripcion;
-        this.severidad = severidad;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "descripcion", nullable = false)
+    private String descripcion;
+
+    @Column(name = "severidad")
+    private String severidad;
+
+    @Column(name = "condicion_asociada")
+    private String condicionAsociada;
+
+    @ManyToOne
+    @JoinColumn(name = "vacuna_afectada_id")
+    private Vacuna vacunaAfectada;
 }

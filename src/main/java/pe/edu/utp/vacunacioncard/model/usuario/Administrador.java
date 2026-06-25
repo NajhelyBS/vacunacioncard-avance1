@@ -1,9 +1,7 @@
 package pe.edu.utp.vacunacioncard.model.usuario;
 
-import java.time.LocalDate;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * Clase Administrador que representa un usuario administrador del sistema.
@@ -13,15 +11,16 @@ import lombok.Setter;
  * @version 1.0
  */
 
+@Entity
+@Table(name = "mae_administrador")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class Administrador extends Usuario{
-    private String nivelAcceso = "TOTAL";
-    private String area;
+public class Administrador extends Usuario {
 
-    
-    public Administrador(String nombreCompleto, String dni, LocalDate fechaNacimiento) {
-        super(nombreCompleto, dni, fechaNacimiento);
-    }
+    @Column(name = "nivel_acceso")
+    private String nivelAcceso = "TOTAL";
+
+    @Column(name = "area")
+    private String area;
 }

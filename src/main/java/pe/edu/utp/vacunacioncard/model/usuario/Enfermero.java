@@ -1,10 +1,7 @@
 package pe.edu.utp.vacunacioncard.model.usuario;
 
-import java.time.LocalDate;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * Clase Enfermero que representa un profesional de salud encargado de aplicar vacunas.
@@ -13,16 +10,19 @@ import lombok.Setter;
  * @version 1.0
  */
 
+@Entity
+@Table(name = "mae_enfermero")
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class Enfermero extends Usuario{
-    private String colegiatura;
-    private String especialidad;
-    private String centroTrabajo;
+public class Enfermero extends Usuario {
 
-    public Enfermero(String nombreCompleto, String dni, LocalDate fechaNacimiento, String colegiatura) {
-        super(nombreCompleto, dni, fechaNacimiento);
-        this.colegiatura = colegiatura;
-    }
+    @Column(name = "colegiatura")
+    private String colegiatura;
+
+    @Column(name = "especialidad")
+    private String especialidad;
+
+    @Column(name = "centro_trabajo")
+    private String centroTrabajo;
 }

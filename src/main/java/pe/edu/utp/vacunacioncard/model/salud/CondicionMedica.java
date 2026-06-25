@@ -1,33 +1,44 @@
 package pe.edu.utp.vacunacioncard.model.salud;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.util.UUID;
+import java.io.Serializable;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
- * Clase CondicionMedica que representa una condición médica del paciente.
+ * Clase CondicionMedica que representa una condicion medica del paciente.
  *
  * @author Grupo 1
  * @version 1.0
  */
 
+@Builder
+@Entity
+@Table(name = "mae_condicion_medica")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class CondicionMedica {
-    private final String id = UUID.randomUUID().toString();
-    private String nombre;
-    private String codigoCIE10;
-    private String descripcion;
-    private String tratamiento;
-    private boolean activa =  true;
+public class CondicionMedica implements Serializable {
 
-    public CondicionMedica(String nombre, String codigoCIE10) {
-        if (nombre == null || codigoCIE10 == null) {
-            throw new IllegalArgumentException("Nombre y código CIE10 son obligatorios");
-        }
-        this.nombre = nombre;
-        this.codigoCIE10 = codigoCIE10;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "codigo_cie10")
+    private String codigoCIE10;
+
+    @Column(name = "descripcion")
+    private String descripcion;
+
+    @Column(name = "tratamiento")
+    private String tratamiento;
+
+    @Column(name = "activa")
+    private boolean activa = true;
 }

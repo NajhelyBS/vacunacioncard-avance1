@@ -1,32 +1,39 @@
 package pe.edu.utp.vacunacioncard.model.usuario;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.util.UUID;
+import java.io.Serializable;
+
+import jakarta.persistence.*;
+import lombok.*;
+
 /**
- * Clase SeguroMedico que representa el seguro médico asociado a un paciente.
- * Contiene información relevante sobre cobertura y póliza.
+ * Clase SeguroMedico que representa el seguro medico asociado a un paciente.
+ * Contiene informacion relevante sobre cobertura y poliza.
  *
  * @author Grupo 1
  * @version 1.0
  */
 
+@Builder
+@Entity
+@Table(name = "mae_seguro_medico")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class SeguroMedico {
-    private final String id = UUID.randomUUID().toString();
-    private String nombre;
-    private String numeroPoliza;
-    private String cobertura;
+public class SeguroMedico implements Serializable {
 
-    public SeguroMedico(String nombre, String numeroPoliza, String cobertura) {
-        if (nombre == null || numeroPoliza == null || cobertura == null) {
-            throw new IllegalArgumentException("Todos los campos son obligatorios");
-        }
-        this.nombre = nombre;
-        this.numeroPoliza = numeroPoliza;
-        this.cobertura = cobertura;
-    }
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "numero_poliza", nullable = false)
+    private String numeroPoliza;
+
+    @Column(name = "cobertura", nullable = false)
+    private String cobertura;
 }
