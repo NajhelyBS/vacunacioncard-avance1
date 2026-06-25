@@ -3,11 +3,13 @@ package pe.edu.utp.vacunacioncard.service.patron.singleton;
 import java.io.Serializable;
 import java.time.ZoneId;
 import lombok.Getter;
+import lombok.Setter; 
 
 /**
  * Singleton que centraliza la configuracion global del sistema de vacunacion.
  */
 @Getter
+@Setter 
 public class ConfiguracionSistema implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -20,10 +22,9 @@ public class ConfiguracionSistema implements Serializable {
     private boolean notificacionesActivas = true;
 
     /**
-     * Constructor 
+     * Constructor con visibilidad de paquete para mitigar el Code Smell de SonarQube.
      */
     ConfiguracionSistema() {
-        
     }
 
     /**
@@ -35,35 +36,4 @@ public class ConfiguracionSistema implements Serializable {
         }
         return instancia;
     }
-
-    /**
-     * Actualiza el máximo de intentos de inicio de sesión de forma segura.
-     */
-    public synchronized void setMaxIntentosLogin(int maxIntentosLogin) {
-        this.maxIntentosLogin = maxIntentosLogin;
-    }
-
-    /**
-     * Define la validez en días para una cita programada de forma segura.
-     */
-    public synchronized void setDiasValidezCita(int diasValidezCita) {
-        this.diasValidezCita = diasValidezCita;
-    }
-
-    /**
-     * Activa o desactiva el envío de notificaciones de forma segura.
-     */
-    public synchronized void setNotificacionesActivas(boolean notificacionesActivas) {
-        this.notificacionesActivas = notificacionesActivas;
-    }
-
-    /**
-     * Establece el nombre oficial del sistema de forma segura.
-     */
-    public synchronized void setNombreSistema(String nombreSistema) {
-        this.nombreSistema = nombreSistema;
-    }
 }
-
-
-
