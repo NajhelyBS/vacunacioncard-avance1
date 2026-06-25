@@ -8,9 +8,6 @@ import lombok.*;
 
 /**
  * Clase Contacto embebible en entidades que requieren información de contacto.
- *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Embeddable
