@@ -11,8 +11,6 @@ import pe.edu.utp.vacunacioncard.model.usuario.Paciente;
 /**
  * Clase AplicacionDosis que representa la aplicacion de una dosis especifica a un paciente.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder

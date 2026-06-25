@@ -12,8 +12,6 @@ import lombok.*;
  * Clase Vacuna que representa una vacuna disponible en el sistema.
  * Contiene información médica y de administración.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder

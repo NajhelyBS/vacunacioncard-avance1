@@ -11,8 +11,6 @@ import pe.edu.utp.vacunacioncard.model.usuario.Enfermero;
  * Clase RegistroVacuna que representa el registro de aplicacion de una vacuna.
  * Contiene informacion de la dosis aplicada.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder

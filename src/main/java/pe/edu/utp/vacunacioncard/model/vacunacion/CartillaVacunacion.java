@@ -11,9 +11,7 @@ import pe.edu.utp.vacunacioncard.model.usuario.Paciente;
 /**
  * Clase CartillaVacunacion que representa la cartilla de vacunacion de un paciente.
  * Almacena el historial de vacunas aplicadas.
- *
- * @author Grupo 1
- * @version 1.0
+ 
  */
 
 @Builder

@@ -8,8 +8,6 @@ import lombok.*;
 /**
  * Clase Laboratorio que representa el laboratorio farmacéutico que produce una vacuna.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder

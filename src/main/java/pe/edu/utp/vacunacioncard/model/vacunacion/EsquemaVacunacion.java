@@ -12,8 +12,6 @@ import pe.edu.utp.vacunacioncard.model.usuario.Paciente;
 /**
  * Clase EsquemaVacunacion que representa el esquema de vacunacion que debe seguir un paciente.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder
