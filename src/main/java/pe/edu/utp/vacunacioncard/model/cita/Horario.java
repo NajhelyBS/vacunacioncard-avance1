@@ -1,18 +1,16 @@
 package pe.edu.utp.vacunacioncard.model.cita;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 /**
- * Entidad Horario que representa el horario de atencion para vacunacion.
- *
+ * Entidad Horario que representa el horario de atención para vacunación.
  */
-
 @Builder
 @Entity
 @Table(name = "mae_horario")
@@ -27,22 +25,25 @@ public class Horario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dia_semana", nullable = false, length = 20)
+    private DiaSemana diaSemana;
 
-    @Column(name = "dia_semana")
-    private String diaSemana;
-
-    @Column(name = "hora_inicio")
+    @Column(name = "hora_inicio", nullable = false)
     private LocalTime horaInicio;
 
-    @Column(name = "hora_fin")
+    @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin;
 
-    @Column(name = "capacidad_por_intervalo")
+    @Column(name = "capacidad_por_intervalo", nullable = false)
     private int capacidadPorIntervalo;
 
     @ElementCollection
-    @CollectionTable(name = "mae_horario_intervalos", joinColumns = @JoinColumn(name = "horario_id"))
-    @Column(name = "intervalo")
+    @CollectionTable(
+            name = "horario_intervalos_disponibles",
+            joinColumns = @JoinColumn(name = "horario_id")
+    )
+    @Column(name = "intervalo", nullable = false)
     @Builder.Default
     private List<String> intervalosDisponibles = new ArrayList<>();
 }
