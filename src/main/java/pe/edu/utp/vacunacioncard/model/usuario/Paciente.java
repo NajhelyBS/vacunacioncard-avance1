@@ -16,8 +16,6 @@ import pe.edu.utp.vacunacioncard.model.salud.Contraindicacion;
 /**
  * Clase Paciente que representa un paciente del sistema.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder

@@ -9,7 +9,6 @@ import pe.edu.utp.vacunacioncard.model.comun.Direccion;
 
 /**
  * Entidad base abstracta para los usuarios del sistema.
- * Implementa Serializable para cumplir con los estándares de persistencia y calidad.
  */
 @Entity
 @Table(name = "mae_usuario")

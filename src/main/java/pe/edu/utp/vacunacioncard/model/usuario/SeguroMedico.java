@@ -9,8 +9,6 @@ import lombok.*;
  * Clase SeguroMedico que representa el seguro medico asociado a un paciente.
  * Contiene informacion relevante sobre cobertura y poliza.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Builder

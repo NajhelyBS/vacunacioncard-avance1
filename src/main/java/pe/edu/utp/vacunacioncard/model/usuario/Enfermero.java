@@ -6,8 +6,6 @@ import lombok.*;
 /**
  * Clase Enfermero que representa un profesional de salud encargado de aplicar vacunas.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Entity

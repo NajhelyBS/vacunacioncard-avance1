@@ -7,8 +7,6 @@ import lombok.*;
  * Clase Administrador que representa un usuario administrador del sistema.
  * Gestiona configuraciones y usuarios.
  *
- * @author Grupo 1
- * @version 1.0
  */
 
 @Entity
