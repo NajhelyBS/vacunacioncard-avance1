@@ -35,8 +35,8 @@ public class SesionUsuarioServiceImpl implements ISesionUsuarioService {
     @Override
     @Transactional
     public SesionUsuario crearSesion(SesionUsuario sesion) {
-        log.info("Creando sesión para cuenta ID: {}",
-                sesion.getCuenta() != null ? sesion.getCuenta().getId() : "N/A");
+        log.info("Creando sesión para cuenta ID: {}", 
+            sesion.getCuenta() != null ? sesion.getCuenta().getId() : "N/A"); 
         try {
             SesionUsuario guardada = repo.save(sesion);
             log.info("Sesión creada con ID: {}", guardada.getId());
