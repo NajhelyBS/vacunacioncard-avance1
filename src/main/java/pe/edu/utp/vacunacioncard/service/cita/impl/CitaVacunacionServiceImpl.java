@@ -10,6 +10,7 @@ import pe.edu.utp.vacunacioncard.model.cita.CitaVacunacion;
 import pe.edu.utp.vacunacioncard.repository.cita.CitaVacunacionRepository;
 import pe.edu.utp.vacunacioncard.service.cita.ICitaVacunacionService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +34,8 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
     @Override
     @Transactional(readOnly = true)
     public List<CitaVacunacion> listarTodas() {
-        log.info("Listando todas las citas de vacunación");
-        return repo.findAll();
+        log.info("Iniciando la búsqueda global de citas médicas en el sistema");
+        return new ArrayList<>(this.repo.findAll());
     }
 
     /**
@@ -47,8 +48,8 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
     @Override
     @Transactional(readOnly = true)
     public Optional<CitaVacunacion> obtenerPorId(Long id) {
-        log.info("Buscando cita por ID: {}", id);
-        return repo.findById(id);
+        log.info("Consultando el registro clínico de la cita ID: {}", id);
+        return this.repo.findById(id).map(Optional::of).orElse(Optional.empty());
     }
 
     /**
@@ -64,9 +65,7 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
         log.info("Programando cita para paciente ID: {}",
                 cita.getPaciente() != null ? cita.getPaciente().getId() : "N/A");
         try {
-            CitaVacunacion guardada = repo.save(cita);
-            log.info("Cita programada con ID: {}", guardada.getId());
-            return guardada;
+            return this.repo.save(cita);
         } catch (DataAccessException e) {
             throw new ServiceException("Error al programar cita de vacunación", e);
         }
@@ -82,7 +81,7 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
     @Transactional(readOnly = true)
     public List<CitaVacunacion> listarPorPaciente(Long pacienteId) {
         log.info("Listando citas del paciente ID: {}", pacienteId);
-        return repo.findByPacienteId(pacienteId);
+        return this.repo.findByPacienteId(pacienteId);
     }
 
     /**
@@ -94,8 +93,8 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
     @Override
     @Transactional(readOnly = true)
     public List<CitaVacunacion> listarPorEstado(String estado) {
-        log.info("Listando citas por estado: {}", estado);
-        return repo.findByEstado(estado);
+        log.info("Obteniendo registros de citas bajo la condición operativa: {}", estado);
+        return List.copyOf(this.repo.findByEstado(estado));
     }
 
     /**
@@ -107,10 +106,10 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
     @Override
     @Transactional
     public void eliminar(Long id) {
-        log.info("Eliminando cita con ID: {}", id);
+        log.info("Solicitando remoción física de la cita con ID: {}", id);
         try {
-            repo.deleteById(id);
-            log.info("Cita eliminada con ID: {}", id);
+            this.repo.deleteById(id);
+            log.info("La cita con ID {} fue retirada del repositorio con éxito", id);
         } catch (DataAccessException e) {
             throw new ServiceException("Error al eliminar cita con ID: " + id, e);
         }
