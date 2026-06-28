@@ -13,6 +13,11 @@ import pe.edu.utp.vacunacioncard.service.vacunacion.ICartillaVacunacionService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para la gestión de Cartillas de Vacunación.
+ * Constituye el eje central del módulo médico, administrando el historial digitalizado 
+ * de dosis de los ciudadanos y permitiendo su validación remota mediante identificadores QR.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,11 @@ public class CartillaVacunacionServiceImpl implements ICartillaVacunacionService
 
     private final CartillaVacunacionRepository repo;
 
+    /**
+     * Recupera un listado global con todas las cartillas de vacunación registradas en el sistema.
+     *
+     * @return {@link List} que contiene la totalidad de las entidades {@link CartillaVacunacion}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CartillaVacunacion> listarTodas() {
@@ -27,6 +37,13 @@ public class CartillaVacunacionServiceImpl implements ICartillaVacunacionService
         return repo.findAll();
     }
 
+    /**
+     * Busca una cartilla de vacunación específica mediante su identificador interno único.
+     *
+     * @param id Identificador único de la cartilla en la base de datos.
+     * @return Un {@link Optional} que contiene la {@link CartillaVacunacion} si se encuentra,
+     *         o un contenedor vacío si no existe el registro.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CartillaVacunacion> obtenerPorId(Long id) {
@@ -34,6 +51,13 @@ public class CartillaVacunacionServiceImpl implements ICartillaVacunacionService
         return repo.findById(id);
     }
 
+    /**
+     * Registra una nueva cartilla sanitaria o actualiza los metadatos de un historial médico existente.
+     *
+     * @param cartilla Entidad {@link CartillaVacunacion} que enlaza al paciente y sus registros de dosis.
+     * @return La entidad {@link CartillaVacunacion} guardada de forma persistente con su respectivo ID.
+     * @throws ServiceException Si ocurre una anomalía de acceso a datos o violación de restricciones de llave única.
+     */
     @Override
     @Transactional
     public CartillaVacunacion guardar(CartillaVacunacion cartilla) {
@@ -48,6 +72,13 @@ public class CartillaVacunacionServiceImpl implements ICartillaVacunacionService
         }
     }
 
+    /**
+     * Localiza la cartilla de vacunación correspondiente a un paciente en específico.
+     *
+     * @param pacienteId Identificador único del paciente del cual se requiere el historial médico.
+     * @return Un {@link Optional} con la {@link CartillaVacunacion} vinculada al ciudadano, 
+     *         o vacío si aún no se le ha aperturado una cartilla.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CartillaVacunacion> obtenerPorPaciente(Long pacienteId) {
@@ -55,6 +86,12 @@ public class CartillaVacunacionServiceImpl implements ICartillaVacunacionService
         return repo.findByPacienteId(pacienteId);
     }
 
+    /**
+     * Busca y valida un historial médico empleando la cadena de texto única codificada en su código QR.
+     *
+     * @param codigoQR Cadena única hash o alfanumérica que representa la firma del código QR de la cartilla.
+     * @return Un {@link Optional} con la {@link CartillaVacunacion} hallada, o vacío si el código no coincide.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CartillaVacunacion> obtenerPorCodigoQR(String codigoQR) {

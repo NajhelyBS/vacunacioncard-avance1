@@ -13,6 +13,12 @@ import pe.edu.utp.vacunacioncard.service.campania.ICampaniaVacunacionService;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Implementación del servicio para la gestión de campañas de vacunación.
+ * Proporciona la lógica de negocio para la planificación, consulta por estados
+ * y el ciclo de vida completo de la entidad CampaniaVacunacion.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,11 @@ public class CampaniaVacunacionServiceImpl implements ICampaniaVacunacionService
 
     private final CampaniaVacunacionRepository repo;
 
+     /**
+     * Recupera un listado completo de todas las campañas de vacunación del sistema.
+     *
+     * @return {@link List} que contiene todas las entidades {@link CampaniaVacunacion}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CampaniaVacunacion> listarTodas() {
@@ -27,6 +38,13 @@ public class CampaniaVacunacionServiceImpl implements ICampaniaVacunacionService
         return repo.findAll();
     }
 
+    /**
+     * Busca una campaña de vacunación específica mediante su identificador único.
+     *
+     * @param id Identificador único de la campaña de vacunación.
+     * @return Un {@link Optional} con la {@link CampaniaVacunacion} si se encuentra,
+     *         o un contenedor vacío si no existe.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CampaniaVacunacion> obtenerPorId(Long id) {
@@ -34,6 +52,13 @@ public class CampaniaVacunacionServiceImpl implements ICampaniaVacunacionService
         return repo.findById(id);
     }
 
+     /**
+     * Registra una nueva campaña de vacunación o actualiza los datos de una existente.
+     *
+     * @param campania Entidad {@link CampaniaVacunacion} con la información a persistir.
+     * @return La entidad {@link CampaniaVacunacion} almacenada con su ID asignado.
+     * @throws ServiceException Si ocurre un error de acceso o persistencia en la base de datos.
+     */
     @Override
     @Transactional
     public CampaniaVacunacion registrar(CampaniaVacunacion campania) {
@@ -47,6 +72,13 @@ public class CampaniaVacunacionServiceImpl implements ICampaniaVacunacionService
         }
     }
 
+
+    /**
+     * Filtra y obtiene las campañas de vacunación según su estado operativo actual.
+     *
+     * @param estado Estado de la campaña (ej. "ACTIVA", "FINALIZADA", "PROGRAMADA").
+     * @return {@link List} de entidades {@link CampaniaVacunacion} que coinciden con el estado enviado.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CampaniaVacunacion> listarPorEstado(String estado) {
@@ -54,6 +86,13 @@ public class CampaniaVacunacionServiceImpl implements ICampaniaVacunacionService
         return repo.findByEstado(estado);
     }
 
+
+    /**
+     * Elimina una campaña de vacunación del sistema mediante su ID.
+     *
+     * @param id Identificador único de la campaña que se desea eliminar.
+     * @throws ServiceException Si ocurre un fallo de integridad o conectividad al borrar el registro.
+     */
     @Override
     @Transactional
     public void eliminar(Long id) {

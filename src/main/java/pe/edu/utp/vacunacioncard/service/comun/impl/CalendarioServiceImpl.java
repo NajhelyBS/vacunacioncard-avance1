@@ -14,6 +14,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para la gestión del calendario del sistema.
+ * Administra la lógica de negocio para registrar fechas operativas, evaluar la 
+ * disponibilidad de días hábiles y controlar el ciclo de vida de la entidad Calendario.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,6 +26,13 @@ public class CalendarioServiceImpl implements ICalendarioService {
 
     private final CalendarioRepository repo;
 
+    /**
+     * Registra o actualiza una fecha específica en el calendario del sistema.
+     *
+     * @param calendario Entidad {@link Calendario} con la información de la fecha y sus atributos.
+     * @return La entidad {@link Calendario} guardada con su identificador único asignado.
+     * @throws ServiceException Si ocurre un error de persistencia o acceso a la base de datos al guardar.
+     */
     @Override
     @Transactional
     public Calendario guardarDia(Calendario calendario) {
@@ -34,6 +46,13 @@ public class CalendarioServiceImpl implements ICalendarioService {
         }
     }
 
+    /**
+     * Busca la configuración de un día específico en el calendario mediante su fecha exacta.
+     *
+     * @param fecha Objeto {@link LocalDate} que representa la fecha exacta a consultar (ej. 2026-07-28).
+     * @return Un {@link Optional} que contiene el {@link Calendario} si está registrado,
+     *         o un contenedor vacío si la fecha no existe en el sistema.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Calendario> obtenerPorFecha(LocalDate fecha) {
@@ -41,6 +60,13 @@ public class CalendarioServiceImpl implements ICalendarioService {
         return repo.findByFecha(fecha);
     }
 
+    /**
+     * Filtra y obtiene los días registrados según su condición de disponibilidad laborable o no laborable.
+     *
+     * @param esHabil Criterio de disponibilidad: {@code true} para listar días laborables/hábiles,
+     *                {@code false} para listar días no laborables o feriados.
+     * @return {@link List} de entidades {@link Calendario} que cumplen con la condición de disponibilidad enviada.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Calendario> listarPorDisponibilidad(boolean esHabil) {
@@ -48,6 +74,12 @@ public class CalendarioServiceImpl implements ICalendarioService {
         return repo.findByEsHabil(esHabil);
     }
 
+    /**
+     * Elimina del registro general una fecha del calendario mediante su identificador único.
+     *
+     * @param id Identificador único del registro de calendario a eliminar.
+     * @throws ServiceException Si se genera una falla de conectividad o restricción de datos al borrar el registro.
+     */
     @Override
     @Transactional
     public void eliminar(Long id) {

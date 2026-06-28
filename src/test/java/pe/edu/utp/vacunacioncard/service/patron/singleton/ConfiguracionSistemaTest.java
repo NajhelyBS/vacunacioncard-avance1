@@ -67,8 +67,16 @@ class ConfiguracionSistemaTest {
     void citaVigente() {
         LocalDate hoy = LocalDate.now(config.getZonaHoraria());
 
+        // Caso 1: Una cita programada para hoy es vigente
         assertTrue(config.isCitaVigente(hoy));
+
+        // Caso 2: Una cita de hace exactamente 30 días todavía es vigente (Límite)
+        assertTrue(config.isCitaVigente(hoy.minusDays(30)));
+
+        // Caso 3: Una cita de hace 31 días ya caducó (Fuera de límite)
         assertFalse(config.isCitaVigente(hoy.minusDays(31)));
+
+        // Caso 4: Una cita nula no es vigente
         assertFalse(config.isCitaVigente(null));
     }
 }

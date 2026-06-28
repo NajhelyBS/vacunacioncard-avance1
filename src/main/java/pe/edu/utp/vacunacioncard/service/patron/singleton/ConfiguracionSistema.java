@@ -7,9 +7,8 @@ import lombok.Getter;
 
 /**
  * Singleton que centraliza la configuración global del sistema de vacunación.
- * Implementa el patrón Bill Pugh (Initialization-on-demand holder) para
- * garantizar thread-safety y lazy initialization.
  */
+@SuppressWarnings("java:S6548")
 @Getter
 public class ConfiguracionSistema implements Serializable {
     private static final long serialVersionUID = 1L;

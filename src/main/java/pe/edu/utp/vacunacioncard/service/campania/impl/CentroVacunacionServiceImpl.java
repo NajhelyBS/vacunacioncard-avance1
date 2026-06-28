@@ -13,6 +13,11 @@ import pe.edu.utp.vacunacioncard.service.campania.ICentroVacunacionService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para la gestión de centros de vacunación.
+ * Administra la lógica de negocio para el registro, baja de establecimientos
+ * y búsquedas avanzadas por disponibilidad o coincidencias de nombre.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,11 @@ public class CentroVacunacionServiceImpl implements ICentroVacunacionService {
 
     private final CentroVacunacionRepository repo;
 
+    /**
+     * Recupera un listado completo con todos los centros de vacunación registrados.
+     *
+     * @return {@link List} que contiene todas las entidades {@link CentroVacunacion}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CentroVacunacion> listarTodos() {
@@ -27,6 +37,13 @@ public class CentroVacunacionServiceImpl implements ICentroVacunacionService {
         return repo.findAll();
     }
 
+    /**
+     * Busca un centro de vacunación específico utilizando su identificador único.
+     *
+     * @param id Identificador único del centro de vacunación.
+     * @return Un {@link Optional} con el {@link CentroVacunacion} si se encuentra,
+     *         o un contenedor vacío si no existe.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CentroVacunacion> obtenerPorId(Long id) {
@@ -34,6 +51,13 @@ public class CentroVacunacionServiceImpl implements ICentroVacunacionService {
         return repo.findById(id);
     }
 
+    /**
+     * Registra un nuevo centro de vacunación o actualiza la información de uno existente.
+     *
+     * @param centro Entidad {@link CentroVacunacion} con los datos a persistir.
+     * @return La entidad {@link CentroVacunacion} guardada con su ID asignado de forma única.
+     * @throws ServiceException Si ocurre un fallo de acceso a datos durante la persistencia.
+     */
     @Override
     @Transactional
     public CentroVacunacion registrar(CentroVacunacion centro) {
@@ -47,6 +71,13 @@ public class CentroVacunacionServiceImpl implements ICentroVacunacionService {
         }
     }
 
+    /**
+     * Filtra los centros de vacunación de acuerdo a su disponibilidad operativa actual.
+     *
+     * @param activo Estado operativo a filtrar: {@code true} para centros habilitados,
+     *               {@code false} para deshabilitados.
+     * @return {@link List} de entidades {@link CentroVacunacion} que coinciden con el estado enviado.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CentroVacunacion> listarPorEstado(boolean activo) {
@@ -54,6 +85,14 @@ public class CentroVacunacionServiceImpl implements ICentroVacunacionService {
         return repo.findByActivo(activo);
     }
 
+    /**
+     * Busca centros de vacunación cuyo nombre contenga el texto enviado como parámetro.
+     * La consulta ignora la diferencia entre mayúsculas y minúsculas (Case Insensitive) 
+     * y evalúa coincidencias parciales.
+     *
+     * @param nombre Cadena de texto o término de búsqueda a buscar en el nombre del centro.
+     * @return {@link List} de entidades {@link CentroVacunacion} que cumplen con el criterio de coincidencia.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CentroVacunacion> buscarPorNombre(String nombre) {
@@ -61,6 +100,12 @@ public class CentroVacunacionServiceImpl implements ICentroVacunacionService {
         return repo.findByNombreContainingIgnoreCase(nombre);
     }
 
+    /**
+     * Elimina del sistema un centro de vacunación mediante su identificador único.
+     *
+     * @param id Identificador único del establecimiento a eliminar.
+     * @throws ServiceException Si ocurre un error de persistencia o restricción de llave foránea al borrar.
+     */
     @Override
     @Transactional
     public void eliminar(Long id) {

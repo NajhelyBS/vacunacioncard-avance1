@@ -13,6 +13,10 @@ import pe.edu.utp.vacunacioncard.service.auth.IRolService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para la gestión de roles de usuario.
+ * Controla las operaciones de negocio, persistencia y consultas específicas de la entidad Rol.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,13 +24,25 @@ public class RolServiceImpl implements IRolService {
 
     private final RolRepository repo;
 
+    /**
+     * Recupera un listado completo con todos los roles registrados en el sistema.
+     *
+     * @return {@link List} que contiene todas las entidades {@link Rol}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Rol> listarTodo() {
         log.info("Listando todos los roles");
         return repo.findAll();
     }
-
+    
+     /**
+     * Guarda un nuevo rol o actualiza uno existente en el repositorio.
+     *
+     * @param rol Entidad {@link Rol} con la información a almacenar.
+     * @return La entidad {@link Rol} guardada con su identificador generado.
+     * @throws ServiceException Si ocurre un error de persistencia o acceso a la base de datos.
+     */
     @Override
     @Transactional
     public Rol guardar(Rol rol) {
@@ -40,6 +56,12 @@ public class RolServiceImpl implements IRolService {
         }
     }
 
+    /**
+     * Busca un rol en el sistema filtrándolo por su nombre único.
+     *
+     * @param nombre Nombre descriptivo del rol.
+     * @return Un {@link Optional} con el {@link Rol} hallado, o vacío si no coincide ninguno.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Rol> buscarPorNombre(String nombre) {
@@ -47,6 +69,12 @@ public class RolServiceImpl implements IRolService {
         return repo.findByNombre(nombre);
     }
 
+    /**
+     * Remueve un rol del sistema utilizando su identificador único.
+     *
+     * @param id Identificador único del rol que se desea eliminar.
+     * @throws ServiceException Si se presenta un fallo de conectividad o restricción de datos al borrar.
+     */
     @Override
     @Transactional
     public void eliminar(Long id) {

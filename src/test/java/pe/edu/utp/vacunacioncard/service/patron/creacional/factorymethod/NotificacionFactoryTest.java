@@ -10,18 +10,21 @@ import pe.edu.utp.vacunacioncard.model.usuario.Usuario;
 import pe.edu.utp.vacunacioncard.model.vacunacion.RegistroVacuna;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@SuppressWarnings("java:S5976") 
 @DisplayName("Factory Method - NotificacionFactory")
 class NotificacionFactoryTest {
 
     private final Usuario usuario = new Enfermero();
+    private static final String ZONE_LIMA = "America/Lima";
 
     @Test
     @DisplayName("Crea notificación de tipo SISTEMA")
     void creaTipoSistema() {
-        Notificacion notif = NotificacionFactory.crearNotificacion("SISTEMA", usuario, "Mensaje");
+        INotificacionFactory factory = new SistemaNotificacionFactory("SISTEMA");
+        Notificacion notif = factory.crearNotificacion(usuario, "Mensaje");
 
         assertInstanceOf(NotificacionSistema.class, notif);
         assertEquals("Mensaje", notif.getMensaje());
@@ -31,7 +34,8 @@ class NotificacionFactoryTest {
     @Test
     @DisplayName("Crea notificación de tipo ALERTA")
     void creaTipoAlerta() {
-        Notificacion notif = NotificacionFactory.crearNotificacion("ALERTA", usuario, "Alerta");
+        INotificacionFactory factory = new SistemaNotificacionFactory("ALERTA");
+        Notificacion notif = factory.crearNotificacion(usuario, "Alerta");
 
         assertInstanceOf(NotificacionSistema.class, notif);
     }
@@ -39,7 +43,8 @@ class NotificacionFactoryTest {
     @Test
     @DisplayName("Crea notificación de tipo INFORMACION")
     void creaTipoInformacion() {
-        Notificacion notif = NotificacionFactory.crearNotificacion("INFORMACION", usuario, "Info");
+        INotificacionFactory factory = new SistemaNotificacionFactory("INFORMACION");
+        Notificacion notif = factory.crearNotificacion(usuario, "Info");
 
         assertInstanceOf(NotificacionSistema.class, notif);
     }
@@ -47,7 +52,8 @@ class NotificacionFactoryTest {
     @Test
     @DisplayName("Acepta tipos en minúsculas")
     void aceptaMinusculas() {
-        Notificacion notif = NotificacionFactory.crearNotificacion("sistema", usuario, "Test");
+        INotificacionFactory factory = new SistemaNotificacionFactory("sistema");
+        Notificacion notif = factory.crearNotificacion(usuario, "Test");
 
         assertInstanceOf(NotificacionSistema.class, notif);
     }
@@ -55,24 +61,28 @@ class NotificacionFactoryTest {
     @Test
     @DisplayName("Lanza excepción para tipo no soportado")
     void tipoInvalido() {
+        INotificacionFactory factory = new SistemaNotificacionFactory("INVALIDO");
         assertThrows(IllegalArgumentException.class,
-                () -> NotificacionFactory.crearNotificacion("INVALIDO", usuario, "Msg"));
+                () -> factory.crearNotificacion(usuario, "Msg"));
     }
 
     @Test
-    @DisplayName("Lanza excepción para tipo nulo")
+    @DisplayName("Lanza excepción para tipo nulo o vacío en fábrica de sistema")
     void tipoNulo() {
         assertThrows(IllegalArgumentException.class,
-                () -> NotificacionFactory.crearNotificacion(null, usuario, "Msg"));
+                () -> new SistemaNotificacionFactory(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new SistemaNotificacionFactory("   "));
     }
 
     @Test
     @DisplayName("Crea recordatorio correctamente")
     void creaRecordatorio() {
         RegistroVacuna registro = new RegistroVacuna();
-        LocalDateTime fecha = LocalDateTime.now().plusDays(30);
+        LocalDateTime fecha = LocalDateTime.now(ZoneId.of(ZONE_LIMA)).plusDays(30);
 
-        Notificacion notif = NotificacionFactory.crearRecordatorio(usuario, registro, fecha);
+        INotificacionFactory factory = new RecordatorioNotificacionFactory(registro, fecha);
+        Notificacion notif = factory.crearNotificacion(usuario, null);
 
         assertInstanceOf(NotificacionRecordatorio.class, notif);
         assertEquals("Recordatorio de proxima dosis", notif.getMensaje());
@@ -81,16 +91,20 @@ class NotificacionFactoryTest {
     @Test
     @DisplayName("Recordatorio lanza excepción si registro es nulo")
     void recordatorioRegistroNulo() {
-        LocalDateTime fecha = LocalDateTime.now();
+        LocalDateTime fecha = LocalDateTime.now(ZoneId.of(ZONE_LIMA));
+        INotificacionFactory factory = new RecordatorioNotificacionFactory(null, fecha);
+        
         assertThrows(IllegalArgumentException.class,
-                () -> NotificacionFactory.crearRecordatorio(usuario, null, fecha));
+                () -> factory.crearNotificacion(usuario, null));
     }
 
     @Test
     @DisplayName("Recordatorio lanza excepción si fecha es nula")
     void recordatorioFechaNula() {
         RegistroVacuna registro = new RegistroVacuna();
+        INotificacionFactory factory = new RecordatorioNotificacionFactory(registro, null);
+        
         assertThrows(IllegalArgumentException.class,
-                () -> NotificacionFactory.crearRecordatorio(usuario, registro, null));
+                () -> factory.crearNotificacion(usuario, null));
     }
 }

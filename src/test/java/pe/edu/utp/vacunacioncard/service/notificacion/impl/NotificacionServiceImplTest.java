@@ -14,6 +14,7 @@ import pe.edu.utp.vacunacioncard.model.vacunacion.RegistroVacuna;
 import pe.edu.utp.vacunacioncard.repository.notificacion.NotificacionRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +29,8 @@ class NotificacionServiceImplTest {
 
     @InjectMocks
     private NotificacionServiceImpl service;
+    
+    private static final String ZONE_LIMA = "America/Lima";
 
     private Usuario crearUsuario() {
         Enfermero enfermero = new Enfermero();
@@ -40,12 +43,15 @@ class NotificacionServiceImplTest {
     void enviarNotificacion() {
         Usuario usuario = crearUsuario();
         NotificacionSistema notif = new NotificacionSistema(usuario, "Test", "SISTEMA");
-        when(repo.save(notif)).thenReturn(notif);
+        
+        when(repo.save(any(Notificacion.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Notificacion resultado = service.enviarNotificacion(notif);
 
+        assertNotNull(resultado);
         assertEquals("ENVIADA", resultado.getEstado());
         assertNotNull(resultado.getFechaEnvio());
+        verify(repo, times(1)).save(any(Notificacion.class));
     }
 
     @Test
@@ -56,18 +62,18 @@ class NotificacionServiceImplTest {
         List<Notificacion> resultado = service.listarPorUsuario(1L);
 
         assertTrue(resultado.isEmpty());
-        verify(repo).findByDestinatarioId(1L);
+        verify(repo, times(1)).findByDestinatarioId(1L);
     }
 
     @Test
     @DisplayName("Registrar alerta usa la Factory y guarda")
     void registrarNuevaAlerta() {
         Usuario usuario = crearUsuario();
-        when(repo.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(repo.save(any(Notificacion.class))).thenAnswer(inv -> inv.getArgument(0));
 
         service.registrarNuevaAlerta(usuario, "Alerta importante");
 
-        verify(repo).save(any(Notificacion.class));
+        verify(repo, times(1)).save(any(Notificacion.class));
     }
 
     @Test
@@ -75,11 +81,12 @@ class NotificacionServiceImplTest {
     void registrarRecordatorio() {
         Usuario usuario = crearUsuario();
         RegistroVacuna registro = new RegistroVacuna();
-        LocalDateTime fecha = LocalDateTime.now().plusDays(30);
-        when(repo.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        
+        LocalDateTime fecha = LocalDateTime.now(ZoneId.of(ZONE_LIMA)).plusDays(30);
+        when(repo.save(any(Notificacion.class))).thenAnswer(inv -> inv.getArgument(0));
 
         service.registrarRecordatorioVacuna(usuario, registro, fecha);
 
-        verify(repo).save(any(Notificacion.class));
+        verify(repo, times(1)).save(any(Notificacion.class));
     }
 }

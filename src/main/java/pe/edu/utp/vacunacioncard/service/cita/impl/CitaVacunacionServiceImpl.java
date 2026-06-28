@@ -13,6 +13,11 @@ import pe.edu.utp.vacunacioncard.service.cita.ICitaVacunacionService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para la gestión de citas de vacunación.
+ * Controla el ciclo de vida de las citas (programación, cancelación) y provee
+ * consultas filtradas por pacientes o estados del proceso de inmunización.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,11 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
 
     private final CitaVacunacionRepository repo;
 
+    /**
+     * Recupera un listado global con todas las citas de vacunación registradas.
+     *
+     * @return {@link List} que contiene todas las entidades {@link CitaVacunacion}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CitaVacunacion> listarTodas() {
@@ -27,6 +37,13 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
         return repo.findAll();
     }
 
+    /**
+     * Busca el detalle de una cita de vacunación mediante su identificador único.
+     *
+     * @param id Identificador único de la cita.
+     * @return Un {@link Optional} con la {@link CitaVacunacion} si existe,
+     *         o vacío en caso contrario.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CitaVacunacion> obtenerPorId(Long id) {
@@ -34,6 +51,13 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
         return repo.findById(id);
     }
 
+    /**
+     * Registra y programa una nueva cita de vacunación en el sistema.
+     *
+     * @param cita Entidad {@link CitaVacunacion} con los datos de fecha, hora, paciente y vacuna.
+     * @return La entidad {@link CitaVacunacion} guardada con su respectivo ID generado.
+     * @throws ServiceException Si se presenta un inconveniente de acceso a datos al programar la cita.
+     */
     @Override
     @Transactional
     public CitaVacunacion programar(CitaVacunacion cita) {
@@ -48,6 +72,12 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
         }
     }
 
+    /**
+     * Obtiene el historial cronológico de citas correspondientes a un único paciente.
+     *
+     * @param pacienteId Identificador único del paciente asociado.
+     * @return {@link List} de entidades {@link CitaVacunacion} vinculadas al paciente.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CitaVacunacion> listarPorPaciente(Long pacienteId) {
@@ -55,6 +85,12 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
         return repo.findByPacienteId(pacienteId);
     }
 
+    /**
+     * Recupera las citas que coinciden con un estado operativo específico.
+     *
+     * @param estado Estado de la cita (ej. "PENDIENTE", "ATENDIDA", "CANCELADA").
+     * @return {@link List} de entidades {@link CitaVacunacion} que comparten dicho estado.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<CitaVacunacion> listarPorEstado(String estado) {
@@ -62,6 +98,12 @@ public class CitaVacunacionServiceImpl implements ICitaVacunacionService {
         return repo.findByEstado(estado);
     }
 
+    /**
+     * Elimina del registro una cita de vacunación mediante su ID.
+     *
+     * @param id Identificador único de la cita a remover.
+     * @throws ServiceException Si ocurre una excepción de persistencia o restricción de base de datos.
+     */
     @Override
     @Transactional
     public void eliminar(Long id) {

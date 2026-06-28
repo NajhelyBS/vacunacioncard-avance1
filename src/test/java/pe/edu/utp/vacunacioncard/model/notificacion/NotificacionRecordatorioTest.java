@@ -8,6 +8,7 @@ import pe.edu.utp.vacunacioncard.model.vacunacion.RegistroVacuna;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NotificacionRecordatorioTest {
 
     private final Usuario usuario = new Enfermero();
+    private static final String ZONE_LIMA = "America/Lima";
 
     @Test
     @DisplayName("Constructor asigna campos correctamente")
@@ -27,13 +29,13 @@ class NotificacionRecordatorioTest {
         assertEquals("Recordatorio de proxima dosis", notif.getMensaje());
         assertSame(usuario, notif.getDestinatario());
         assertSame(registro, notif.getRegistroVacuna());
-        assertEquals(fecha, notif.getFechaRecordatorio());
+        assertTrue(fecha.isEqual(notif.getFechaRecordatorio()));
     }
 
     @Test
     @DisplayName("Lanza excepción si registro es nulo")
     void registroNulo() {
-        LocalDateTime fecha = LocalDateTime.now();
+        LocalDateTime fecha = LocalDateTime.now(ZoneId.of(ZONE_LIMA));
         assertThrows(IllegalArgumentException.class,
                 () -> new NotificacionRecordatorio(usuario, null, fecha));
     }

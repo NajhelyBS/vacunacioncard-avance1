@@ -13,13 +13,24 @@ import pe.edu.utp.vacunacioncard.service.auth.IPermisoService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para la gestión de permisos del sistema.
+ * Maneja la lógica de negocio, búsquedas por código y persistencia de la entidad Permiso.
+ */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
+
 public class PermisoServiceImpl implements IPermisoService {
 
     private final PermisoRepository repo;
 
+    /**
+     * Obtiene una lista con todos los permisos registrados en el sistema.
+     *
+     * @return {@link List} de todas las entidades {@link Permiso}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Permiso> listarTodos() {
@@ -27,6 +38,13 @@ public class PermisoServiceImpl implements IPermisoService {
         return repo.findAll();
     }
 
+     /**
+     * Registra o actualiza un permiso en el sistema.
+     *
+     * @param permiso Entidad {@link Permiso} con los datos a persistir.
+     * @return La entidad {@link Permiso} guardada con su identificador asignado.
+     * @throws ServiceException Si ocurre un error a nivel de base de datos durante el guardado.
+     */
     @Override
     @Transactional
     public Permiso guardar(Permiso permiso) {
@@ -40,6 +58,13 @@ public class PermisoServiceImpl implements IPermisoService {
         }
     }
 
+     /**
+     * Registra o actualiza un permiso en el sistema.
+     *
+     * @param permiso Entidad {@link Permiso} con los datos a persistir.
+     * @return La entidad {@link Permiso} guardada con su identificador asignado.
+     * @throws ServiceException Si ocurre un error a nivel de base de datos durante el guardado.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Permiso> buscarPorCodigo(String codigo) {
@@ -47,6 +72,12 @@ public class PermisoServiceImpl implements IPermisoService {
         return repo.findByCodigo(codigo);
     }
 
+    /**
+     * Elimina un permiso del sistema utilizando su identificador único.
+     *
+     * @param id Identificador único del permiso a eliminar.
+     * @throws ServiceException Si ocurre un error de acceso a datos al intentar eliminar el registro.
+     */
     @Override
     @Transactional
     public void eliminar(Long id) {

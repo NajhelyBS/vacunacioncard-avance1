@@ -13,6 +13,11 @@ import pe.edu.utp.vacunacioncard.service.patron.singleton.ConfiguracionSistema;
 
 import java.util.Optional;
 
+/**
+ * Implementación del servicio para el control de sesiones de usuario.
+ * Gestiona el ciclo de vida de las sesiones (creación, búsqueda, cierre) y la 
+ * validación de bloqueo basada en configuraciones del sistema.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,13 @@ public class SesionUsuarioServiceImpl implements ISesionUsuarioService {
 
     private final SesionUsuarioRepository repo;
 
+    /**
+     * Registra una nueva sesión de usuario en el sistema.
+     *
+     * @param sesion Entidad {@link SesionUsuario} con los datos de autenticación y token.
+     * @return La entidad {@link SesionUsuario} persistida con su ID generado.
+     * @throws ServiceException Si ocurre un fallo en el acceso a datos al intentar almacenar la sesión.
+     */
     @Override
     @Transactional
     public SesionUsuario crearSesion(SesionUsuario sesion) {
@@ -34,6 +46,13 @@ public class SesionUsuarioServiceImpl implements ISesionUsuarioService {
         }
     }
 
+    /**
+     * Recupera una sesión activa o histórica mediante su token de autenticación.
+     *
+     * @param token Cadena de texto única que identifica la sesión (ej. JWT o UUID).
+     * @return Un {@link Optional} que contiene la {@link SesionUsuario} si el token existe, 
+     *         o un contenedor vacío si no hay coincidencias.
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<SesionUsuario> obtenerPorToken(String token) {
@@ -41,6 +60,12 @@ public class SesionUsuarioServiceImpl implements ISesionUsuarioService {
         return repo.findByToken(token);
     }
 
+     /**
+     * Invalida de forma lógica una sesión de usuario modificando su estado a inactiva.
+     *
+     * @param id Identificador único de la sesión que se desea cerrar.
+     * @throws ServiceException Si se genera un error de persistencia al actualizar el estado de la sesión.
+     */
     @Override
     @Transactional
     public void cerrarSesion(Long id) {
@@ -57,7 +82,12 @@ public class SesionUsuarioServiceImpl implements ISesionUsuarioService {
     }
 
     /**
-     * Uso del patrón Singleton para obtener el límite de intentos desde la configuración global.
+     * Evalúa si una cuenta debe ser bloqueada comparando los intentos actuales con el límite configurado.
+     * Este método hace uso de la clase {@link ConfiguracionSistema} mediante el patrón de diseño 
+     * Singleton para extraer los parámetros globales de autenticación.     *
+     * @param intentosFallidos Cantidad de intentos erróneos acumulados por el usuario.
+     * @return {@code true} si los intentos igualan o superan el límite permitido, requiriendo bloqueo; 
+     *         {@code false} en caso contrario.
      */
     @Override
     @Transactional

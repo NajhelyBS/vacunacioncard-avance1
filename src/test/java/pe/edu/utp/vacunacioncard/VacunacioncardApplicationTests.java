@@ -8,5 +8,6 @@ class VacunacioncardApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// Prueba para verificar que el contexto de Spring Boot se carga correctamente.
 	}
 }
