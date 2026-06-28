@@ -16,6 +16,7 @@ import pe.edu.utp.vacunacioncard.service.patron.singleton.ConfiguracionSistema;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,10 +34,13 @@ class SesionUsuarioServiceImplTest {
         ConfiguracionSistema.getInstancia().reset();
     }
 
-    @Test
-    @DisplayName("Crear sesión guarda y retorna correctamente")
-    void crearSesion() {
-        SesionUsuario sesion = SesionUsuario.builder().token("abc123").activa(true).build();
+        @Test
+    @DisplayName("Crear sesión guarda y retorna correctamente cuando tiene cuenta")
+    void crearSesion_ConCuenta() {
+        pe.edu.utp.vacunacioncard.model.auth.CuentaUsuario cuentaFake = new pe.edu.utp.vacunacioncard.model.auth.CuentaUsuario();
+        cuentaFake.setId(99L);
+
+        SesionUsuario sesion = SesionUsuario.builder().token("abc123").cuenta(cuentaFake).activa(true).build();
         when(repo.save(sesion)).thenReturn(sesion);
 
         SesionUsuario resultado = service.crearSesion(sesion);
@@ -47,16 +51,17 @@ class SesionUsuarioServiceImplTest {
     }
 
     @Test
-    @DisplayName("Crear sesión evalúa el log cuando la cuenta es nula")
-    void crearSesion_cuentaNula_evaluaLog() {
+    @DisplayName("Crear sesión guarda correctamente cuando la cuenta es nula")
+    void crearSesion_SinCuenta() {
         SesionUsuario sesionSinCuenta = SesionUsuario.builder().token("xyz789").cuenta(null).activa(true).build();
         when(repo.save(sesionSinCuenta)).thenReturn(sesionSinCuenta);
 
         SesionUsuario resultado = service.crearSesion(sesionSinCuenta);
 
         assertNotNull(resultado);
-        verify(repo, times(1)).save(sesionSinCuenta); 
+        verify(repo, times(1)).save(sesionSinCuenta);
     }
+
 
     @Test
     @DisplayName("Crear sesión lanza ServiceException si falla el repositorio")
